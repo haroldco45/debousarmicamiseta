@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tinterillo Pro - VIBRAS POSITIVAS HM</title>
+    <style>
+        :root {
+            --primary-color: #003366;
+            --secondary-color: #008080;
+            --bg-color: #f4f6f9;
+            --text-color: #333333;
+            --paper-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        header {
+            grid-column: span 2;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .panel-control, .panel-vista {
+            background: var(--paper-bg);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        h2, h3 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-primary { background-color: var(--primary-color); color: white; }
+        .btn-primary:hover { background-color: #002244; }
+        .btn-success { background-color: #28a745; color: white; }
+        .btn-success:hover { background-color: #218838; }
+        .btn-secondary { background-color: #6c757d; color: white; }
+
+        /* Estilos de papel legal para la vista previa */
+        .documento-legal {
+            background: #fff;
+            padding: 40px;
+            border: 1px solid #ddd;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+            text-align: justify;
+            white-space: pre-wrap;
+            color: #000;
+        }
+
+        .watermark {
+            text-align: center;
+            font-weight: bold;
+            color: #ddd;
+            font-size: 12px;
+            margin-top: 30px;
+            border-top: 1px dashed #ccc;
+            padding-top: 10px;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Configuración de Impresión */
+        @media print {
+            body * { visibility: hidden; }
+            .panel-vista, .panel-vista * { visibility: visible; }
+            .panel-vista {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                max-height: none;
+                overflow: visible;
+                box-shadow: none;
+                padding: 0;
+            }
+            button, .btn-group { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>TINTERILLO PRO v2.0</h1>
+        <p>Gestión de Trámites y Minutas Legales Ajustadas a la Ley Colombiana</p>
+    </header>
+
+    <!-- PANEL DE CONTROL Y CONFIGURACIÓN -->
+    <div class="panel-control">
+        <h2>1. Datos del Trámite</h2>
+        
+        <div class="form-group">
+            <label for="tipoTramite">Seleccione el Tipo de Documento:</label>
+            <select id="tipoTramite" onchange="cargarPlantilla()">
+                <option value="tutela">Acción de Tutela (Derechos Fundamentales)</option>
+                <option value="peticion">Derecho de Petición (Art. 23 C.P.)</option>
+                <option value="compraventa">Promesa de Compraventa Universal</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="ciudadFecha">Ciudad y Fecha de Emisión:</label>
+            <input type="text" id="ciudadFecha" value="Caucasia, Antioquia, 10 de junio de 2026">
+        </div>
+
+        <h3>2. Partes Involucradas (Modificable)</h3>
+        <div class="form-group">
+            <label id="lblParteA" for="parteA">Actor / Solicitante / Arrendador:</label>
+            <input type="text" id="parteA" value="HAROLD AUGUSTO MARÍN MACHADO">
+        </div>
+        <div class="form-group">
+            <label for="docParteA">Identificación (C.C. o NIT):</label>
+            <input type="text" id="docParteA" value="C.C. No. 15.534.210 de Caucasia">
+        </div>
+
+        <div class="form-group">
+            <label id="lblParteB" for="parteB">Accionado / Entidad / Arrendatario:</label>
+            <input type="text" id="parteB" value="ADMINISTRACIÓN Y/O INSPECCIÓN DE OPERACIÓN SECTORIAL">
+        </div>
+
+        <h3>3. Hechos y Pretensiones (Cuerpo Completo - Sin Resúmenes)</h3>
+        <div class="form-group">
+            <label for="cuerpoTexto">Edite las Cláusulas o Hechos Jurídicos aquí:</label>
+            <textarea id="cuerpoTexto" rows="12" oninput="actualizarVista()"></textarea>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-primary" onclick="actualizarVista()">🔄 Sincronizar Edición</button>
+            <button class="btn-success" onclick="guardarBackup()">💾 Guardar Copia Backup</button>
+        </div>
+    </div>
+
+    <!-- PANEL DE VISTA PREVIA Y ACCIONES DE SALIDA -->
+    <div class="panel-vista">
+        <h2>2. Vista Previa Legal (Formato Profesional)</h2>
+        <div class="btn-group" style="margin-bottom: 15px;">
+            <button class="btn-primary" onclick="window.print()">🖨️ Imprimir Trámite Listo</button>
+        </div>
+        
+        <div class="documento-legal" id="documentoImpresion">
+            <!-- El contenido dinámico se genera aquí -->
+        </div>
+        
+        <div class="watermark">
+            © APP DESARROLLADA BAJO LOS DERECHOS DE AUTOR DE VIBRAS POSITIVAS HM
+        </div>
+    </div>
+</div>
+
+<script>
+    // Base de datos de minutas sin "letra chiquita" y con cláusulas completas
+    const plantillas = {
+        tutela: {
+            lblA: "Accionante (Ciudadano Afectado):",
+            lblB: "Accionado (Autoridad/Particular):",
+            parteA: "HAROLD AUGUSTO MARÍN MACHADO",
+            docA: "C.C. No. 15.534.210",
+            parteB: "DIRECCIÓN DE CONTROL INTERNO / ADMINISTRACIÓN",
+            cuerpo: `SEÑOR:
+JUEZ PENAL MUNICIPAL (REPARTO)
+Caucasia, Antioquia, Colombia.
+
+REFERENCIA: ACCIÓN DE TUTELA PARA EL AMPARO DE DERECHOS FUNDAMENTALES
+
+ACCIOR: HAROLD AUGUSTO MARÍN MACHADO, mayor de edad, vecino de este municipio, identificado como aparece al pie de mi firma, actuando en nombre propio, de conformidad con lo establecido en el Artículo 86 de la Constitución Política de Colombia y los Decretos 2591 de 1991, 1382 de 2000 y demás normas concordantes, interpongo ACCIÓN DE TUTELA en contra de la entidad/persona arriba mencionada, con fundamento en los siguientes rigurosos hechos:
+
+HECHOS JURÍDICOS COMPLETOS:
+PRIMERO: Que el suscrito accionante se encontraba portando de manera pacífica, ordenada y digna la indumentaria oficial de la Selección Nacional de Fútbol de Colombia, elemento que constituye una manifestación legítima de mi identidad cultural, libre desarrollo de la personalidad y libre expresión ciudadana.
+SEGUNDO: Que de manera restrictiva, arbitraria y sin fundamento legal en norma superior vigente, la parte accionada impuso un veto o prohibición expresa que me impide portar dicha prenda, restringiendo el libre tránsito y acceso en condiciones de igualdad.
+TERCERO: Que la conducta desplegada por el accionado carece de proporcionalidad y razonabilidad, configurando una vía de hecho administrativa que lesiona directamente mi dignidad humana.
+
+DERECHOS VULNERADOS:
+Solicito el amparo definitivo de los Derechos Fundamentales al LIBRE DESARROLLO DE LA PERSONALIDAD (Art. 16 C.P.), LIBERTAD DE EXPRESIÓN (Art. 20 C.P.) y el DEBIDO PROCESO (Art. 29 C.P.).
+
+PRETENSIONES EXPRESAS:
+PRIMERA: Ordenar a la parte accionada el cese inmediato de cualquier restricción, amonestación o medida prohibitiva que impida al accionante portar la camiseta de la selección de fútbol de Colombia.
+SEGUNDA: Conminar a la accionada para que se abstenga de reincidir en conductas restrictivas de los derechos fundamentales aquí invocados.
+
+PRUEBAS:
+1. Declaración de los hechos de modo, tiempo y lugar.
+
+FUNDAMENTOS DE DERECHO:
+Artículo 86 de la Constitución Política y Sentencias de la Corte Constitucional sobre el libre desarrollo de la personalidad.
+
+NOTIFICACIONES:
+El suscrito recibirá notificaciones en el Municipio de Caucasia, Antioquia.`
+        },
+        peticion: {
+            lblA: "Peticionario (Solicitante):",
+            lblB: "Entidad Destinataria:",
+            parteA: "",
+            docA: "",
+            parteB: "",
+            cuerpo: `SEÑOR(ES):
+REPRESENTANTE LEGAL / DIRECCIÓN COMPETENTE
+E. S. D.
+
+ASUNTO: DERECHO DE PETICIÓN EN INTERÉS PARTICULAR (Art. 23 de la C.P. y Ley 1755 de 2015)
+
+Yo, en mi condición de ciudadano en pleno ejercicio de mis derechos civiles, de manera respetuosa me dirijo a su despacho invocando el derecho consagrado en el artículo 23 de la Constitución Política de Colombia, con el objeto de fundamentar las siguientes peticiones bajo las cláusulas legales vigentes:
+
+HECHOS SUSTANCIALES:
+PRIMERO: (Digitar de manera clara y cronológica el fundamento de la reclamación)
+SEGUNDO: Que a la fecha de hoy no se ha obtenido una solución efectiva o de fondo a la situación planteada.
+
+PRETENSIONES / PETICIONES:
+PRIMERA: Solicito de manera expresa se sirva emitir respuesta de fondo, clara, precisa y congruente respecto a...
+SEGUNDA: Requiero copia íntegra de todo el expediente o actuación administrativa relacionada.
+
+NOTIFICACIONES:
+Recibo respuesta de manera preferente en la dirección física y electrónica aportada en el formulario.`
+        },
+        compraventa: {
+            lblA: "Promitente Vendedor (Quien enajena):",
+            lblB: "Promitente Comprador (Quien adquiere):",
+            parteA: "",
+            docA: "",
+            parteB: "",
+            cuerpo: `CONTRATO DE PROMESA DE COMPRAVENTA DE BIEN INMUEBLE UNIVERSAL
+
+Entre los suscritos a saber por una parte el PROMITENTE VENDEDOR y por la otra el PROMITENTE COMPRADOR, ambos mayores de edad, identificados legalmente, se ha convenido celebrar el presente contrato de promesa de compraventa regido por la legislación civil colombiana vigente y las siguientes cláusulas estrictas:
+
+CLÁUSULA PRIMERA - OBJETO: El PROMITENTE VENDEDOR se obliga a vender, y el PROMITENTE COMPRADOR a comprar el derecho de dominio y posesión que el primero tiene sobre el inmueble ubicado en el municipio de...
+CLÁUSULA SEGUNDA - PRECIO Y FORMA DE PAGO: El precio acordado de manera irrevocable entre las partes es la suma de ($___________), la cual se cancelará de la siguiente forma:...
+CLÁUSULA TERCERA - SANCIÓN POR INCUMPLIMIENTO (ARRAS): Las partes fijan una cláusula penal equivalente al diez por ciento (10%) del valor total del contrato en caso de retracto o incumplimiento de las obligaciones aquí pactadas.
+CLÁUSULA CUARTA - PAZ Y SALVO: El inmueble se entregará libre de pleitos pendientes, embargos, condiciones resolutorias, hipotecas y al día por concepto de impuestos, tasas y contribuciones.`
+        }
+    };
+
+    // Inicialización del sistema
+    function init() {
+        cargarPlantilla();
+    }
+
+    // Cambiar dinámicamente entre formatos manteniendo el diseño limpio
+    function cargarPlantilla() {
+        const tipo = document.getElementById("tipoTramite").value;
+        const data = plantillas[tipo];
+
+        document.getElementById("lblParteA").innerText = data.lblA;
+        document.getElementById("lblParteB").innerText = data.lblB;
+        
+        if(data.parteA !== "") {
+            document.getElementById("parteA").value = data.parteA;
+            document.getElementById("docParteA").value = data.docA;
+            document.getElementById("parteB").value = data.parteB;
+        }
+
+        document.getElementById("cuerpoTexto").value = data.cuerpo;
+        actualizarVista();
+    }
+
+    // Sincronización inmediata entre formulario y el papel legal imprimible
+    function actualizarVista() {
+        const fecha = document.getElementById("ciudadFecha").value;
+        const parteA = document.getElementById("parteA").value;
+        const docA = document.getElementById("docParteA").value;
+        const parteB = document.getElementById("parteB").value;
+        const cuerpo = document.getElementById("cuerpoTexto").value;
+
+        let documentoHTML = `<strong>FECHA Y LUGAR:</strong> ${fecha}\n`;
+        documentoHTML += `<strong>CONVOCANTE/ACTOR/ARRENDADOR:</strong> ${parteA} -- IDENTIFICACIÓN: ${docA}\n`;
+        documentoHTML += `<strong>CONVOCADO/ACCIONADO/ARRENDATARIO:</strong> ${parteB}\n`;
+        documentoHTML += `----------------------------------------------------------------------\n\n`;
+        documentoHTML += cuerpo;
+        documentoHTML += `\n\n__________________________________\nFIRMA DEL RESPONSABLE / TRAMITADOR\nIDENTIFICACIÓN APORTADA VIGENTE`;
+
+        document.getElementById("documentoImpresion").innerHTML = documentoHTML;
+    }
+
+    // Cumplimiento de la exigencia de resguardo/informe de Backup local
+    function guardarBackup() {
+        const tramite = document.getElementById("tipoTramite").value;
+        const contenido = document.getElementById("documentoImpresion").innerText;
+        localStorage.setItem(`TinterilloPro_Backup_${tramite}`, contenido);
+        alert("¡Registro de Informe y Backup guardado con éxito de forma local privada en la App!");
+    }
+
+    window.onload = init;
+</script>
+</body>
+</html>
